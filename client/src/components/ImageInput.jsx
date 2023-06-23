@@ -5,30 +5,47 @@ function ImageInput() {
   const [rotateValue, setRotateValue] = useState(0)
   const [image, setImage] = useState()
   const [grayscaleValue, setGrayscaleValue] = useState(false)
+  const [imageFile, setImageFile] = useState()
 
   function imageChange(e) {
+    setImageFile(e.target.files[0])
     setImage(URL.createObjectURL(e.target.files[0]))
   }
 
   function handleSubmit(e) {
     e.preventDefault()
-    console.log(blurValue, rotateValue, grayscaleValue)
-    console.log(image)
+
+    const formData = new FormData()
 
     const data = {
-      'img': image,
+      'img': imageFile,
       'blur': blurValue,
       'rotate': rotateValue,
       'grayscale': grayscaleValue
     }
 
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key])
+    })
+
     fetch('http://localhost:5000/postImage', {
       mode: 'cors',
       method: 'POST',
-      body: JSON.stringify(data)
-    }).then(res => {
-      setImage(URL.createObjectURL(res))
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: formData
     })
+      .then(res => res.blob())
+      .then(blob => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          const dataURL = reader.result
+          setImage(dataURL)
+        }
+
+        reader.readAsDataURL(blob);
+      })
   }
 
   return (
