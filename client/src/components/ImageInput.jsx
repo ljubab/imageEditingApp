@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function ImageInput() {
+function ImageInput({handleImageUpload}) {
   const [blurValue, setBlurValue] = useState(0)
   const [rotateValue, setRotateValue] = useState(0)
   const [image, setImage] = useState()
@@ -41,7 +41,7 @@ function ImageInput() {
         const reader = new FileReader()
         reader.onloadend = () => {
           const dataURL = reader.result
-          setImage(dataURL)
+          handleImageUpload(dataURL)
         }
 
         reader.readAsDataURL(blob);
