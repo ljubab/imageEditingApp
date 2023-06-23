@@ -1,11 +1,15 @@
 from flask import Flask, jsonify, request, send_file
+from flask_cors import CORS, cross_origin
 import imgEditing
 from io import BytesIO
 from wand.image import Image
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/postImage', methods=['POST'])
+@cross_origin()
 def postImage():
     if 'img' not in request.files:
         return jsonify({'error': 'image doesn\'t exist'}), 400
