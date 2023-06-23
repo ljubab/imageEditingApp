@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function ImageInput({handleImageUpload}) {
+function ImageInput({handleImageUpload, handleLoading}) {
   const [blurValue, setBlurValue] = useState(0)
   const [rotateValue, setRotateValue] = useState(0)
   const [image, setImage] = useState()
@@ -14,6 +14,7 @@ function ImageInput({handleImageUpload}) {
 
   function handleSubmit(e) {
     e.preventDefault()
+    handleLoading(true)
 
     const formData = new FormData()
 
@@ -41,6 +42,7 @@ function ImageInput({handleImageUpload}) {
         const reader = new FileReader()
         reader.onloadend = () => {
           const dataURL = reader.result
+          handleLoading(false)
           handleImageUpload(dataURL)
         }
 
